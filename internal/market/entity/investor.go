@@ -31,8 +31,8 @@ func (i *Investor) GetAssetPosition(assetID string) *InvestorAssetPosition {
 		if assetPosition.AssetID == assetID {
 			return assetPosition
 		}
-		return nil
 	}
+	return nil
 }
 
 type InvestorAssetPosition struct {
