@@ -1,8 +1,8 @@
 package transformer
 
 import (
-	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/entity"
 	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/dto"
+	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/entity"
 )
 
 func TransformInput(input dto.TradeInput) *entity.Order {
@@ -19,27 +19,27 @@ func TransformInput(input dto.TradeInput) *entity.Order {
 
 func TransformOutput(order *entity.Order) *dto.OrderOutput {
 	output := &dto.OrderOutput{
-		OrderID: 		order.ID,
+		OrderID:    order.ID,
 		InvestorID: order.Investor.ID,
-		AssetID: 		order.Asset.ID,
-		OrderType: 	order.OrderType,
-		Status: 		order.Status,
-		Partial: 		order.PendingShares,
-		Shares: 		order.Shares,
+		AssetID:    order.Asset.ID,
+		OrderType:  order.OrderType,
+		Status:     order.Status,
+		Partial:    order.PendingShares,
+		Shares:     order.Shares,
 	}
 
 	var transactionsOutput []*dto.TransactionOutput
 	for _, t := range order.Transactions {
 		transactionOutput := &dto.TransactionOutput{
-			TransactionID: 	t.ID,
-			BuyerID:				t.BuyingOrder.ID,
-			SellerID:				t.SellingOrder.ID,
-			AssetID:				t.SellingOrder.Asset.ID,
-			Price:					t.Price,
-			Shares:					t.SellingOrder.Shares - t.SellingOrder.PendingShares,
+			TransactionID: t.ID,
+			BuyerID:       t.BuyingOrder.Investor.ID,
+			SellerID:      t.SellingOrder.Investor.ID,
+			AssetID:       t.SellingOrder.Asset.ID,
+			Price:         t.Price,
+			Shares:        t.SellingOrder.Shares - t.SellingOrder.PendingShares,
 		}
 		transactionsOutput = append(transactionsOutput, transactionOutput)
 	}
-	output.TransactionOutput = transactionsOutput
+	output.TransactionsOutput = transactionsOutput
 	return output
 }
