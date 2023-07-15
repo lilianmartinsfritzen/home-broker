@@ -1,13 +1,15 @@
 package main
 
 import (
-	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/transformer"
 	"encoding/json"
-	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/dto"
-	"github.com/lilianmartinsfritzen/home-broker/go/internal/infra/kafka"
+	"fmt"
 	"sync"
-	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/entity"
+
 	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/lilianmartinsfritzen/home-broker/go/internal/infra/kafka"
+	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/dto"
+	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/entity"
+	"github.com/lilianmartinsfritzen/home-broker/go/internal/market/transformer"
 )
 
 func main() {
@@ -40,6 +42,7 @@ func main() {
 	go func() {
 		for msg := range kafkaMsgChan {
 			wg.Add(1)
+			fmt.Println(string(msg.Value))
 			tradeInput := dto.TradeInput{}
 			err := json.Unmarshal(msg.Value, &tradeInput)
 			if err != nil {
@@ -53,6 +56,7 @@ func main() {
 	for res := range ordersOut {
 		output := transformer.TransformOutput(res)
 		outputJson, err := json.MarshalIndent(output, "", "  ")
+		fmt.Println(string(outputJson))
 		if err != nil {
 			fmt.Println(err)
 		}
