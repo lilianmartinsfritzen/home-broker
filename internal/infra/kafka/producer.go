@@ -24,7 +24,7 @@ func (p *Producer) Publish(msg interface{}, key []byte, topic string) error {
 	message := &ckafka.Message{
 		TopicPartition: ckafka.TopicPartition(Topic: &topic, Partition: ckafka.PartitionAny),
 		Key: key,
-		Value: []byte(msg.(string))
+		Value: msg.([]byte),
 	}
 
 	err := producer.Produce(message, nil)
