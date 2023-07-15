@@ -15,8 +15,8 @@ import (
 func main() {
 	ordersIn := make(chan *entity.Order)
 	ordersOut := make(chan *entity.Order)
-	ws := &sync.WaitGroup{}
-	defer ws.Wait()
+	wg := &sync.WaitGroup{}
+	defer wg.Wait()
 
 	kafkaMsgChan := make(chan *ckafka.Message)
 	configMap := &ckafka.ConfigMap{
@@ -27,7 +27,7 @@ func main() {
 	producer := kafka.NewKafkaProducer(configMap)
 	kafka := kafka.NewConsumer(configMap, []string{"input"})
 
-	// com o go na frente acamos de criar uma segunda Thread 
+	// com o go na frente acamos de criar uma segunda Thread
 	// caso contrário nada que foi escrito abaixo dessa linha funcionaria, seria bloqueado
 	go kafka.Consume(kafkaMsgChan)
 
