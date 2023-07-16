@@ -1,19 +1,19 @@
 package kafka
 
-// esse ckafka foi um "apelido" para que o nome do package não 
-// conflite com o kafka da lib da confluent que será utilizada 
+// esse ckafka foi um "apelido" para que o nome do package não
+// conflite com o kafka da lib da confluent que será utilizada
 
 import ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 
 type Consumer struct {
 	ConfigMap *ckafka.ConfigMap
-	Topic []string
+	Topics    []string
 }
 
 func NewConsumer(configMap *ckafka.ConfigMap, topics []string) *Consumer {
 	return &Consumer{
 		ConfigMap: configMap,
-		Topics: topics,
+		Topics:    topics,
 	}
 }
 
@@ -22,7 +22,7 @@ func (c *Consumer) Consume(msgChan chan *ckafka.Message) error {
 	if err != nil {
 		panic(err)
 	}
-	err = consumer.SubscribeTopics(c.Topic, nil)
+	err = consumer.SubscribeTopics(c.Topics, nil)
 	if err != nil {
 		panic(err)
 	}
